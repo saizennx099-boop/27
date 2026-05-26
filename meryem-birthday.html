@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>İyi ki Doğdun Meryem 🎂</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose: #ff6b9d;
+    --gold: #ffd700;
+    --peach: #ffb347;
+    --lavender: #c084fc;
+    --cream: #fff5f0;
+    --deep: #1a0a2e;
+    --pink-light: #ffe0ec;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--deep);
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ---- CANVAS (fireworks) ---- */
+  #fireworks-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ---- FLOATING ELEMENTS ---- */
+  .floaties {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .floatie {
+    position: absolute;
+    font-size: 1.5rem;
+    animation: floatUp linear infinite;
+    opacity: 0;
+  }
+
+  @keyframes floatUp {
+    0%   { transform: translateY(110vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(-10vh)  rotate(360deg); opacity: 0; }
+  }
+
+  /* ---- HERO SECTION ---- */
+  .hero {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    background: radial-gradient(ellipse at 50% 0%, #3b0764 0%, #1a0a2e 60%);
+  }
+
+  .glow-ring {
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,107,157,0.3) 0%, transparent 70%);
+    position: absolute;
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.15); opacity: 1; }
+  }
+
+  .cake-emoji {
+    font-size: 6rem;
+    animation: bounce 1.2s ease-in-out infinite;
+    position: relative;
+    z-index: 3;
+    filter: drop-shadow(0 0 20px rgba(255,107,157,0.8));
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-18px) scale(1.05); }
+  }
+
+  .hero-date {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    animation: fadeDown 1s ease 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(3.5rem, 10vw, 7rem);
+    color: #fff;
+    line-height: 1.1;
+    text-shadow: 0 0 40px rgba(255,107,157,0.7), 0 4px 30px rgba(0,0,0,0.5);
+    opacity: 0;
+    animation: fadeDown 1s ease 0.6s forwards;
+  }
+
+  .hero-title span {
+    background: linear-gradient(135deg, var(--rose), var(--peach), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    color: rgba(255,255,255,0.75);
+    margin-top: 0.8rem;
+    opacity: 0;
+    animation: fadeDown 1s ease 0.9s forwards;
+  }
+
+  .scroll-hint {
+    margin-top: 3rem;
+    color: rgba(255,255,255,0.4);
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    animation: blink 2s ease-in-out infinite, fadeDown 1s ease 2s forwards;
+    opacity: 0;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 0.4; } 50% { opacity: 1; }
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---- STARS ---- */
+  .stars {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .star {
+    position: absolute;
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: #fff;
+    animation: twinkle linear infinite;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.5); }
+  }
+
+  /* ---- SECTIONS ---- */
+  section {
+    position: relative;
+    z-index: 2;
+    padding: 5rem 2rem;
+  }
+
+  .section-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  /* ---- WISH SECTION ---- */
+  .wish-section {
+    background: linear-gradient(180deg, #1a0a2e 0%, #2d1459 50%, #1a0a2e 100%);
+  }
+
+  .wish-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,107,157,0.3);
+    border-radius: 24px;
+    padding: 3.5rem 2.5rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 60px rgba(255,107,157,0.15), inset 0 0 40px rgba(255,255,255,0.03);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .wish-card::before {
+    content: '✨';
+    position: absolute;
+    font-size: 8rem;
+    top: -2rem; right: -1rem;
+    opacity: 0.07;
+  }
+
+  .wish-card h2 {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    color: var(--rose);
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 20px rgba(255,107,157,0.5);
+  }
+
+  .wish-card p {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    color: rgba(255,255,255,0.85);
+    line-height: 1.9;
+  }
+
+  /* ---- COUNTDOWN ---- */
+  .countdown-section {
+    background: linear-gradient(180deg, #1a0a2e 0%, #0f0520 100%);
+  }
+
+  .countdown-label {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    color: var(--gold);
+    margin-bottom: 2.5rem;
+  }
+
+  .countdown-grid {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .countdown-box {
+    background: linear-gradient(135deg, rgba(255,107,157,0.15), rgba(192,132,252,0.15));
+    border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    min-width: 110px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 30px rgba(255,107,157,0.1);
+  }
+
+  .countdown-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #fff;
+    display: block;
+    line-height: 1;
+    text-shadow: 0 0 20px var(--rose);
+  }
+
+  .countdown-unit {
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-top: 0.5rem;
+    display: block;
+  }
+
+  /* ---- TIMELINE ---- */
+  .timeline-section {
+    background: linear-gradient(180deg, #0f0520 0%, #1a0a2e 100%);
+  }
+
+  .section-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    color: #fff;
+    margin-bottom: 3rem;
+    text-shadow: 0 0 20px rgba(192,132,252,0.5);
+  }
+
+  .timeline {
+    position: relative;
+    padding: 1rem 0;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, transparent, var(--rose), var(--lavender), transparent);
+    transform: translateX(-50%);
+  }
+
+  .tl-item {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: calc(50% + 2rem);
+    margin-bottom: 2.5rem;
+    position: relative;
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.7s ease;
+  }
+
+  .tl-item.right {
+    justify-content: flex-start;
+    padding-right: 0;
+    padding-left: calc(50% + 2rem);
+    transform: translateX(30px);
+  }
+
+  .tl-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .tl-item::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--rose);
+    box-shadow: 0 0 12px var(--rose);
+    z-index: 1;
+  }
+
+  .tl-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,107,157,0.25);
+    border-radius: 16px;
+    padding: 1.2rem 1.5rem;
+    max-width: 320px;
+    text-align: left;
+  }
+
+  .tl-emoji { font-size: 1.8rem; display: block; margin-bottom: 0.4rem; }
+  .tl-title { font-weight: 600; color: var(--rose); font-size: 0.9rem; letter-spacing: 1px; }
+  .tl-text { color: rgba(255,255,255,0.75); font-size: 0.9rem; margin-top: 0.3rem; line-height: 1.6; }
+
+  /* ---- WISHES GALLERY ---- */
+  .gallery-section {
+    background: linear-gradient(180deg, #1a0a2e 0%, #2d1459 100%);
+  }
+
+  .wishes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.2rem;
+    margin-top: 1rem;
+  }
+
+  .wish-bubble {
+    background: linear-gradient(135deg, rgba(255,107,157,0.12), rgba(192,132,252,0.12));
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: default;
+  }
+
+  .wish-bubble:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 16px 40px rgba(255,107,157,0.2);
+    border-color: rgba(255,107,157,0.4);
+  }
+
+  .wish-bubble .icon { font-size: 2.5rem; display: block; margin-bottom: 0.8rem; }
+  .wish-bubble .wish-text { color: rgba(255,255,255,0.85); font-size: 0.95rem; line-height: 1.6; }
+  .wish-bubble .wish-title { color: var(--gold); font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.5rem; }
+
+  /* ---- CONFETTI BUTTON ---- */
+  .confetti-btn-section {
+    background: linear-gradient(180deg, #2d1459 0%, #1a0a2e 100%);
+    padding-bottom: 6rem;
+  }
+
+  .big-btn {
+    background: linear-gradient(135deg, var(--rose), var(--peach));
+    border: none;
+    border-radius: 60px;
+    padding: 1.2rem 3rem;
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.6rem;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(255,107,157,0.5), 0 4px 20px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .big-btn::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .big-btn:hover { transform: scale(1.07); box-shadow: 0 0 50px rgba(255,107,157,0.7); }
+  .big-btn:hover::before { opacity: 1; }
+  .big-btn:active { transform: scale(0.97); }
+
+  .btn-note {
+    margin-top: 1rem;
+    color: rgba(255,255,255,0.4);
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+  }
+
+  /* ---- FOOTER ---- */
+  footer {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 2.5rem;
+    background: #0a0416;
+    border-top: 1px solid rgba(255,107,157,0.15);
+  }
+
+  footer p {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.3rem;
+    color: rgba(255,255,255,0.5);
+  }
+
+  footer span { color: var(--rose); }
+
+  /* ---- MOBILE ---- */
+  @media (max-width: 600px) {
+    .timeline::before { left: 1rem; }
+    .tl-item { justify-content: flex-start; padding-right: 0; padding-left: 3rem; transform: translateX(20px); }
+    .tl-item.right { padding-left: 3rem; transform: translateX(20px); }
+    .tl-item::after { left: 1rem; }
+    .countdown-box { min-width: 80px; padding: 1rem; }
+    .countdown-num { font-size: 2.2rem; }
+  }
+
+  /* ---- MUSIC NOTE ANIMATION ---- */
+  .music-notes {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .note {
+    position: absolute;
+    font-size: 1.2rem;
+    animation: floatNote linear infinite;
+    opacity: 0;
+    color: var(--rose);
+  }
+
+  @keyframes floatNote {
+    0%   { opacity: 0; transform: translateY(0) rotate(0deg); }
+    10%  { opacity: 0.7; }
+    90%  { opacity: 0.4; }
+    100% { opacity: 0; transform: translateY(-80px) rotate(20deg); }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="fireworks-canvas"></canvas>
+
+<div class="stars" id="stars"></div>
+<div class="floaties" id="floaties"></div>
+<div class="music-notes" id="music-notes"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="glow-ring"></div>
+  <div class="cake-emoji">🎂</div>
+  <p class="hero-date">27 Mayıs · Doğum Günün Kutlu Olsun</p>
+  <h1 class="hero-title">Mutlu <span>Yıllar</span><br>Meryem! 🎉</h1>
+  <p class="hero-subtitle">Bugün senin için hazırladık bu sürprizi 💖</p>
+  <p class="scroll-hint">▼ AŞAĞI KAY ▼</p>
+</section>
+
+<!-- DİLEK KARTI -->
+<section class="wish-section">
+  <div class="section-inner">
+    <div class="wish-card">
+      <h2>Sevgili Meryem,</h2>
+      <p>
+        Bugün, hayatımıza renk katan, gülüşüyle ortalığı aydınlatan seni kutlamak için buradayız. 
+        27 Mayıs sana çok yakışıyor — tıpkı baharın en güzel gününe doğmuş gibi. 🌸<br><br>
+        Yaşın başın olsun, hayallerin gerçek olsun, kalbin hep huzurlu kalsın. 
+        Bu yeni yaşın sana mutluluk, sağlık ve sonsuz güzel anılar getirsin.<br><br>
+        <em>İyi ki doğdun, iyi ki varsın!</em> 🥂
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- GERİ SAYIM -->
+<section class="countdown-section">
+  <div class="section-inner">
+    <p class="countdown-label">⏳ Doğum Gününe Kalan Süre</p>
+    <div class="countdown-grid">
+      <div class="countdown-box">
+        <span class="countdown-num" id="cd-days">--</span>
+        <span class="countdown-unit">Gün</span>
+      </div>
+      <div class="countdown-box">
+        <span class="countdown-num" id="cd-hours">--</span>
+        <span class="countdown-unit">Saat</span>
+      </div>
+      <div class="countdown-box">
+        <span class="countdown-num" id="cd-mins">--</span>
+        <span class="countdown-unit">Dakika</span>
+      </div>
+      <div class="countdown-box">
+        <span class="countdown-num" id="cd-secs">--</span>
+        <span class="countdown-unit">Saniye</span>
+      </div>
+    </div>
+    <p id="cd-msg" style="margin-top:1.5rem; color:var(--gold); font-family:'Dancing Script',cursive; font-size:1.5rem;"></p>
+  </div>
+</section>
+
+<!-- TİMELİNE -->
+<section class="timeline-section">
+  <div class="section-inner">
+    <h2 class="section-title">✨ Meryem'in Güzel Özellikleri</h2>
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-card">
+          <span class="tl-emoji">😄</span>
+          <div class="tl-title">Gülen Yüzü</div>
+          <div class="tl-text">Meryem'in gülüşü odaya girince her şey değişiyor. Güneş gibi ışıltılı!</div>
+        </div>
+      </div>
+
+      <div class="tl-item right">
+        <div class="tl-card">
+          <span class="tl-emoji">💪</span>
+          <div class="tl-title">Güçlü Kalbi</div>
+          <div class="tl-text">Zorluklarla başa çıkarken bile asla pes etmeyen, güçlü ve kararlı biri.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-card">
+          <span class="tl-emoji">🌺</span>
+          <div class="tl-title">İnce Ruhu</div>
+          <div class="tl-text">Baharın ortasında doğmuş gibi — taze, canlı ve hayat dolu.</div>
+        </div>
+      </div>
+
+      <div class="tl-item right">
+        <div class="tl-card">
+          <span class="tl-emoji">🤝</span>
+          <div class="tl-title">Sadık Dostu</div>
+          <div class="tl-text">Yanında olmak hep güvende hissettiriyor. Gerçek dostluk bu demek!</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-card">
+          <span class="tl-emoji">🎯</span>
+          <div class="tl-title">Hedeflerine Odaklı</div>
+          <div class="tl-text">Hayallerinin peşinden gitmeyi hiç bırakmayan, ilham veren biri.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- DİLEKLER GALERİSİ -->
+<section class="gallery-section">
+  <div class="section-inner">
+    <h2 class="section-title">🎁 Bu Yıl Dilek Listemiz</h2>
+    <div class="wishes-grid">
+
+      <div class="wish-bubble">
+        <span class="icon">🌟</span>
+        <div class="wish-title">Başarı</div>
+        <div class="wish-text">Her hedefine ulaşman ve hayallerini gerçekleştirmen.</div>
+      </div>
+
+      <div class="wish-bubble">
+        <span class="icon">❤️</span>
+        <div class="wish-title">Sağlık</div>
+        <div class="wish-text">Sağlıklı, mutlu ve neşeli günlerin olması.</div>
+      </div>
+
+      <div class="wish-bubble">
+        <span class="icon">🌸</span>
+        <div class="wish-title">Huzur</div>
+        <div class="wish-text">İçinden gelen bir huzur ve dinginlik sana eşlik etsin.</div>
+      </div>
+
+      <div class="wish-bubble">
+        <span class="icon">✈️</span>
+        <div class="wish-title">Macera</div>
+        <div class="wish-text">Yeni yerleri keşfetmen, heyecan dolu anılar biriktirmen.</div>
+      </div>
+
+      <div class="wish-bubble">
+        <span class="icon">💛</span>
+        <div class="wish-title">Sevgi</div>
+        <div class="wish-text">Sevgi dolu bir çevre ve kıymetini bilen insanlarla kuşatılman.</div>
+      </div>
+
+      <div class="wish-bubble">
+        <span class="icon">🎶</span>
+        <div class="wish-title">Neşe</div>
+        <div class="wish-text">Her gün bir şarkı gibi güzel geçsin, dans et, gül!</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- KONFETTI BUTONU -->
+<section class="confetti-btn-section">
+  <div class="section-inner">
+    <h2 class="section-title">🎊 Partiyi Başlat!</h2>
+    <button class="big-btn" onclick="launchParty()">🎉 Kutla! 🎉</button>
+    <p class="btn-note">tıkla ve havai fişeklere bak ✨</p>
+  </div>
+</section>
+
+<footer>
+  <p>Yapıldı <span>♥</span> ile · Meryem için · 27 Mayıs 🎂</p>
+</footer>
+
+<script>
+// ---- STARS ----
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 120; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  s.style.cssText = `
+    left:${Math.random()*100}%;
+    top:${Math.random()*100}%;
+    animation-duration:${2+Math.random()*4}s;
+    animation-delay:${Math.random()*4}s;
+    width:${1+Math.random()*3}px;
+    height:${1+Math.random()*3}px;
+    opacity:${Math.random()};
+  `;
+  starsEl.appendChild(s);
+}
+
+// ---- FLOATIES ----
+const floatSymbols = ['🎈','🎀','✨','🌸','💖','🎊','🌟','🦋','🍰','🥳','💐','🌺'];
+const floatiesEl = document.getElementById('floaties');
+function spawnFloat() {
+  const f = document.createElement('div');
+  f.className = 'floatie';
+  f.textContent = floatSymbols[Math.floor(Math.random()*floatSymbols.length)];
+  f.style.cssText = `
+    left:${Math.random()*100}%;
+    font-size:${1+Math.random()*1.5}rem;
+    animation-duration:${8+Math.random()*10}s;
+    animation-delay:${Math.random()*5}s;
+  `;
+  floatiesEl.appendChild(f);
+  setTimeout(() => f.remove(), 20000);
+}
+setInterval(spawnFloat, 800);
+for (let i = 0; i < 8; i++) spawnFloat();
+
+// ---- MUSIC NOTES ----
+const notes = ['♩','♪','♫','♬','🎵','🎶'];
+const notesEl = document.getElementById('music-notes');
+function spawnNote() {
+  const n = document.createElement('div');
+  n.className = 'note';
+  n.textContent = notes[Math.floor(Math.random()*notes.length)];
+  n.style.cssText = `
+    left:${Math.random()*100}%;
+    bottom:${Math.random()*30}%;
+    animation-duration:${3+Math.random()*4}s;
+    animation-delay:${Math.random()*2}s;
+    font-size:${0.8+Math.random()*1.2}rem;
+  `;
+  notesEl.appendChild(n);
+  setTimeout(() => n.remove(), 8000);
+}
+setInterval(spawnNote, 1200);
+
+// ---- COUNTDOWN ----
+function updateCountdown() {
+  const now = new Date();
+  const year = now.getFullYear();
+  let bday = new Date(year, 4, 27, 0, 0, 0); // 27 Mayıs
+  if (now > bday) bday = new Date(year + 1, 4, 27, 0, 0, 0);
+
+  const diff = bday - now;
+
+  if (diff <= 0 || (now.getMonth() === 4 && now.getDate() === 27)) {
+    document.getElementById('cd-days').textContent = '0';
+    document.getElementById('cd-hours').textContent = '0';
+    document.getElementById('cd-mins').textContent = '0';
+    document.getElementById('cd-secs').textContent = '0';
+    document.getElementById('cd-msg').textContent = '🎂 BUGÜN DOĞUM GÜNÜN MERYEM! 🎂';
+    return;
+  }
+
+  const days  = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const mins  = Math.floor((diff % 3600000) / 60000);
+  const secs  = Math.floor((diff % 60000) / 1000);
+
+  document.getElementById('cd-days').textContent  = String(days).padStart(2,'0');
+  document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+  document.getElementById('cd-mins').textContent  = String(mins).padStart(2,'0');
+  document.getElementById('cd-secs').textContent  = String(secs).padStart(2,'0');
+
+  if (days === 0) {
+    document.getElementById('cd-msg').textContent = '✨ Neredeyse! Yarın doğum günün! ✨';
+  }
+}
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+// ---- TIMELINE SCROLL ----
+const tlItems = document.querySelectorAll('.tl-item');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.3 });
+tlItems.forEach(el => obs.observe(el));
+
+// ---- FIREWORKS CANVAS ----
+const canvas = document.getElementById('fireworks-canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+
+const particles = [];
+const colors = ['#ff6b9d','#ffd700','#ffb347','#c084fc','#ff9ff3','#48dbfb','#ff6348'];
+
+class Particle {
+  constructor(x, y, color) {
+    this.x = x; this.y = y; this.color = color;
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 2 + Math.random() * 6;
+    this.vx = Math.cos(angle) * speed;
+    this.vy = Math.sin(angle) * speed;
+    this.alpha = 1;
+    this.decay = 0.015 + Math.random() * 0.02;
+    this.size = 2 + Math.random() * 3;
+    this.gravity = 0.1;
+    this.trail = [];
+  }
+  update() {
+    this.trail.push({x: this.x, y: this.y, alpha: this.alpha});
+    if (this.trail.length > 6) this.trail.shift();
+    this.vy += this.gravity;
+    this.x += this.vx;
+    this.y += this.vy;
+    this.alpha -= this.decay;
+    this.vx *= 0.98;
+  }
+  draw() {
+    // trail
+    this.trail.forEach((t, i) => {
+      ctx.beginPath();
+      ctx.arc(t.x, t.y, this.size * (i / this.trail.length) * 0.5, 0, Math.PI * 2);
+      ctx.fillStyle = this.color;
+      ctx.globalAlpha = t.alpha * (i / this.trail.length) * 0.4;
+      ctx.fill();
+    });
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.globalAlpha = this.alpha;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+}
+
+function launchFirework(x, y) {
+  const color = colors[Math.floor(Math.random() * colors.length)];
+  const count = 60 + Math.floor(Math.random() * 40);
+  for (let i = 0; i < count; i++) {
+    particles.push(new Particle(x, y, color));
+  }
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i = particles.length - 1; i >= 0; i--) {
+    particles[i].update();
+    particles[i].draw();
+    if (particles[i].alpha <= 0) particles.splice(i, 1);
+  }
+}
+animate();
+
+// Auto fireworks on load
+function autoFireworks() {
+  for (let i = 0; i < 5; i++) {
+    setTimeout(() => {
+      launchFirework(
+        Math.random() * canvas.width * 0.8 + canvas.width * 0.1,
+        Math.random() * canvas.height * 0.5
+      );
+    }, i * 400);
+  }
+}
+setTimeout(autoFireworks, 1500);
+setInterval(() => {
+  launchFirework(
+    Math.random() * canvas.width * 0.8 + canvas.width * 0.1,
+    Math.random() * canvas.height * 0.4
+  );
+}, 3500);
+
+function launchParty() {
+  for (let i = 0; i < 10; i++) {
+    setTimeout(() => {
+      launchFirework(
+        Math.random() * canvas.width * 0.8 + canvas.width * 0.1,
+        Math.random() * canvas.height * 0.6
+      );
+    }, i * 200);
+  }
+}
+</script>
+</body>
+</html>
