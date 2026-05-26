@@ -31,7 +31,7 @@
     top: 0; left: 0;
     width: 100%; height: 100%;
     pointer-events: none;
-    z-index: 0;
+    z-index: 999; /* Butona basınca havai fişeklerin görünmesi için katman yükseltildi */
   }
 
   /* ---- FLOATING ELEMENTS ---- */
@@ -390,6 +390,15 @@
     padding-bottom: 6rem;
   }
 
+  /* Butonların yan yana durmasını sağlayan sarmalayıcı */
+  .btn-group {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+
   .big-btn {
     background: linear-gradient(135deg, var(--rose), var(--peach));
     border: none;
@@ -406,6 +415,12 @@
     overflow: hidden;
   }
 
+  /* Yeni eklenen Not butonu için lila/mor renk geçişli özel stil */
+  .big-btn.note-btn {
+    background: linear-gradient(135deg, var(--lavender), #8b5cf6);
+    box-shadow: 0 0 30px rgba(192,132,252,0.5), 0 4px 20px rgba(0,0,0,0.3);
+  }
+
   .big-btn::before {
     content: '';
     position: absolute;
@@ -416,12 +431,15 @@
     transition: opacity 0.3s;
   }
 
-  .big-btn:hover { transform: scale(1.07); box-shadow: 0 0 50px rgba(255,107,157,0.7); }
+  .big-btn:hover { transform: scale(1.07); }
+  .big-btn:not(.note-btn):hover { box-shadow: 0 0 50px rgba(255,107,157,0.7); }
+  .big-btn.note-btn:hover { box-shadow: 0 0 50px rgba(192,132,252,0.7); }
+  
   .big-btn:hover::before { opacity: 1; }
   .big-btn:active { transform: scale(0.97); }
 
   .btn-note {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
     color: rgba(255,255,255,0.4);
     font-size: 0.8rem;
     letter-spacing: 2px;
@@ -453,6 +471,8 @@
     .tl-item::after { left: 1rem; }
     .countdown-box { min-width: 80px; padding: 1rem; }
     .countdown-num { font-size: 2.2rem; }
+    .btn-group { flex-direction: column; align-items: center; gap: 1rem; }
+    .big-btn { width: 85%; text-align: center; }
   }
 
   /* ---- MUSIC NOTE ANIMATION ---- */
@@ -488,7 +508,6 @@
 <div class="floaties" id="floaties"></div>
 <div class="music-notes" id="music-notes"></div>
 
-<!-- HERO -->
 <section class="hero">
   <div class="glow-ring"></div>
   <div class="cake-emoji">🎂</div>
@@ -498,7 +517,6 @@
   <p class="scroll-hint">▼ AŞAĞI KAY ▼</p>
 </section>
 
-<!-- DİLEK KARTI -->
 <section class="wish-section">
   <div class="section-inner">
     <div class="wish-card">
@@ -514,7 +532,6 @@
   </div>
 </section>
 
-<!-- GERİ SAYIM -->
 <section class="countdown-section">
   <div class="section-inner">
     <p class="countdown-label">⏳ Doğum Gününe Kalan Süre</p>
@@ -540,7 +557,6 @@
   </div>
 </section>
 
-<!-- TİMELİNE -->
 <section class="timeline-section">
   <div class="section-inner">
     <h2 class="section-title">✨ Meryem'in Güzel Özellikleri</h2>
@@ -590,7 +606,6 @@
   </div>
 </section>
 
-<!-- DİLEKLER GALERİSİ -->
 <section class="gallery-section">
   <div class="section-inner">
     <h2 class="section-title">🎁 Bu Yıl Dilek Listemiz</h2>
@@ -611,7 +626,7 @@
       <div class="wish-bubble">
         <span class="icon">🌸</span>
         <div class="wish-title">Huzur</div>
-        <div class="wish-text">İçinden gelen bir huzur ve dinginlik sana eşlik etsin.</div>
+        <div class="wish-text">İçinden gelen bir huzur and dinginlik sana eşlik etsin.</div>
       </div>
 
       <div class="wish-bubble">
@@ -636,12 +651,14 @@
   </div>
 </section>
 
-<!-- KONFETTI BUTONU -->
 <section class="confetti-btn-section">
   <div class="section-inner">
     <h2 class="section-title">🎊 Partiyi Başlat!</h2>
-    <button class="big-btn" onclick="launchParty()">🎉 Kutla! 🎉</button>
-    <p class="btn-note">tıkla ve havai fişeklere bak ✨</p>
+    <div class="btn-group">
+      <button class="big-btn" onclick="launchParty()">🎉 Kutla! 🎉</button>
+      <button class="big-btn note-btn" onclick="window.open('not.html', '_blank')">💌 Notumu Oku 💌</button>
+    </div>
+    <p class="btn-note">tıkla, kutla ve sürprizleri keşfet ✨</p>
   </div>
 </section>
 
@@ -731,7 +748,7 @@ function updateCountdown() {
   document.getElementById('cd-days').textContent  = String(days).padStart(2,'0');
   document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
   document.getElementById('cd-mins').textContent  = String(mins).padStart(2,'0');
-  document.getElementById('cd-secs').textContent  = String(secs).padStart(2,'0');
+  document.getElementById('cd-secs').textContent = String(secs).padStart(2,'0');
 
   if (days === 0) {
     document.getElementById('cd-msg').textContent = '✨ Neredeyse! Yarın doğum günün! ✨';
@@ -783,7 +800,6 @@ class Particle {
     this.vx *= 0.98;
   }
   draw() {
-    // trail
     this.trail.forEach((t, i) => {
       ctx.beginPath();
       ctx.arc(t.x, t.y, this.size * (i / this.trail.length) * 0.5, 0, Math.PI * 2);
